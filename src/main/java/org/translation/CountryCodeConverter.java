@@ -5,9 +5,8 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-// TODO CheckStyle: Wrong lexicographical order for 'java.util.HashMap' import (remove this comment once resolved)
-import java.util.HashMap;
 import java.util.Map;
+import java.util.HashMap;
 
 /**
  * This class provides the service of converting country codes to their names.
@@ -15,6 +14,8 @@ import java.util.Map;
 public class CountryCodeConverter {
 
     // TODO Task: pick appropriate instance variable(s) to store the data necessary for this class
+    String [] countryNames;
+    String [] countryCodes;
 
     /**
      * Default constructor which will load the country codes from "country-codes.txt"
@@ -36,7 +37,14 @@ public class CountryCodeConverter {
                     .getClassLoader().getResource(filename).toURI()));
 
             // TODO Task: use lines to populate the instance variable(s)
+            this.countryNames = new String [lines.size()];
+            this.countryCodes = new String [lines.size()];
 
+            for (int i = 1; i < lines.size(); i++) {
+                String[] line = lines.get(i).split("\t");
+                this.countryNames[i] = line[0];
+                this.countryCodes[i] = line[2];
+            }
         }
         catch (IOException | URISyntaxException ex) {
             throw new RuntimeException(ex);
@@ -51,7 +59,11 @@ public class CountryCodeConverter {
      */
     public String fromCountryCode(String code) {
         // TODO Task: update this code to use an instance variable to return the correct value
-        return code;
+        int i = 0;
+        while (!countryCodes[i].equals(code)) {
+            i++;
+        }
+        return this.countryNames[i];
     }
 
     /**
@@ -61,7 +73,11 @@ public class CountryCodeConverter {
      */
     public String fromCountry(String country) {
         // TODO Task: update this code to use an instance variable to return the correct value
-        return country;
+        int i = 0;
+        while (!countryNames[i].equals(country)) {
+            i++;
+        }
+        return this.countryCodes[i];
     }
 
     /**
@@ -70,6 +86,6 @@ public class CountryCodeConverter {
      */
     public int getNumCountries() {
         // TODO Task: update this code to use an instance variable to return the correct value
-        return 0;
+        return this.countryNames.length;
     }
 }
