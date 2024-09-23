@@ -60,7 +60,7 @@ public class CountryCodeConverter {
     public String fromCountryCode(String code) {
         // TODO Task: update this code to use an instance variable to return the correct value
         int i = 0;
-        while (!countryCodes[i].equals(code)) {
+        while (!this.countryCodes[i].equals(code)) {
             i++;
         }
         return this.countryNames[i];
@@ -74,7 +74,7 @@ public class CountryCodeConverter {
     public String fromCountry(String country) {
         // TODO Task: update this code to use an instance variable to return the correct value
         int i = 0;
-        while (!countryNames[i].equals(country)) {
+        while (!this.countryNames[i].equals(country)) {
             i++;
         }
         return this.countryCodes[i];
