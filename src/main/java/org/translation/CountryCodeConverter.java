@@ -5,17 +5,16 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-// TODO CheckStyle: Wrong lexicographical order for 'java.util.HashMap' import (remove this comment once resolved)
-import java.util.HashMap;
 import java.util.Map;
+import java.util.HashMap;
 
 /**
  * This class provides the service of converting country codes to their names.
  */
 public class CountryCodeConverter {
 
-    private final HashMap<String, String> codetoname = new HashMap<>();
-    private final HashMap<String, String> nametocode = new HashMap<>();
+    private final Map<String, String> codeToName = new HashMap<>();
+    private final Map<String, String> nameToCode = new HashMap<>();
 
     /**
      * Default constructor which will load the country codes from "country-codes.txt"
@@ -36,10 +35,12 @@ public class CountryCodeConverter {
             List<String> lines = Files.readAllLines(Paths.get(getClass()
                     .getClassLoader().getResource(filename).toURI()));
 
+            lines.remove(0);
+
             for (String line : lines) {
-                String[] a = line.split("/t");
-                codetoname.put(a[2], a[0]);
-                nametocode.put(a[0], a[2]);
+                String[] a = line.split("\t");
+                codeToName.put(a[2].toLowerCase(), a[0]);
+                nameToCode.put(a[0], a[2].toLowerCase());
             }
         }
         catch (IOException | URISyntaxException ex) {
@@ -54,7 +55,7 @@ public class CountryCodeConverter {
      * @return the name of the country corresponding to the code
      */
     public String fromCountryCode(String code) {
-        return codetoname.get(code);
+        return codeToName.get(code);
     }
 
     /**
@@ -63,7 +64,7 @@ public class CountryCodeConverter {
      * @return the 3-letter code of the country
      */
     public String fromCountry(String country) {
-        return nametocode.get(country);
+        return nameToCode.get(country);
     }
 
     /**
@@ -71,6 +72,6 @@ public class CountryCodeConverter {
      * @return how many countries are included in this code converter.
      */
     public int getNumCountries() {
-        return codetoname.size();
+        return codeToName.size();
     }
 }
