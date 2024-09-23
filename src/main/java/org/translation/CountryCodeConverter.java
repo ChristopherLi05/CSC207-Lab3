@@ -14,8 +14,8 @@ import java.util.HashMap;
 public class CountryCodeConverter {
 
     // TODO Task: pick appropriate instance variable(s) to store the data necessary for this class
-    String [] countryNames;
-    String [] countryCodes;
+    private Map<String, String> codeToCountry;
+    private Map<String, String> countryToCode;
 
     /**
      * Default constructor which will load the country codes from "country-codes.txt"
@@ -37,13 +37,16 @@ public class CountryCodeConverter {
                     .getClassLoader().getResource(filename).toURI()));
 
             // TODO Task: use lines to populate the instance variable(s)
-            this.countryNames = new String [lines.size()];
-            this.countryCodes = new String [lines.size()];
+            this.codeToCountry = new HashMap<>();
+            this.countryToCode = new HashMap<>();
 
             for (int i = 1; i < lines.size(); i++) {
                 String[] line = lines.get(i).split("\t");
-                this.countryNames[i] = line[0];
-                this.countryCodes[i] = line[2];
+                String countryName = line[0];     // First column: Country name
+                String alpha3Code = line[2];      // Third column: Alpha-3 code
+
+                this.codeToCountry.put(alpha3Code, countryName);
+                this.countryToCode.put(countryName, alpha3Code);
             }
         }
         catch (IOException | URISyntaxException ex) {
@@ -59,11 +62,12 @@ public class CountryCodeConverter {
      */
     public String fromCountryCode(String code) {
         // TODO Task: update this code to use an instance variable to return the correct value
-        int i = 0;
-        while (!this.countryCodes[i].equals(code)) {
-            i++;
+        code = code.toUpperCase();
+        String country = this.codeToCountry.get(code);
+        if (country == null) {
+            return "Country code not found.";
         }
-        return this.countryNames[i];
+        return country;
     }
 
     /**
@@ -73,11 +77,11 @@ public class CountryCodeConverter {
      */
     public String fromCountry(String country) {
         // TODO Task: update this code to use an instance variable to return the correct value
-        int i = 0;
-        while (!this.countryNames[i].equals(country)) {
-            i++;
+        String code = this.countryToCode.get(country);
+        if (code == null) {
+            return "Country name not found.";
         }
-        return this.countryCodes[i];
+        return code;
     }
 
     /**
@@ -86,6 +90,6 @@ public class CountryCodeConverter {
      */
     public int getNumCountries() {
         // TODO Task: update this code to use an instance variable to return the correct value
-        return this.countryNames.length;
+        return this.codeToCountry.size();
     }
 }
